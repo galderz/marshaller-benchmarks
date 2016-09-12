@@ -17,10 +17,10 @@ import org.openjdk.jmh.infra.Blackhole;
       "-XX:HeapDumpPath=/tmp/java_heap"
 })
 @BenchmarkMode(Mode.Throughput)
-public class MasterMarshallerBenchmark {
+public class NewMarshallerBenchmark {
 
    @Benchmark
-   public void masterMarshallerGetIsolated(MasterInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
+   public void newMarshallerGetIsolated(NewMarshallerInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
       Object key = kg.getNextKey();
       ClusteredGetCommand cmdToBytes = ih.mkGetCmd(key);
       ByteBuffer buf = ih.marshaller.objectToBuffer(cmdToBytes);
@@ -31,7 +31,7 @@ public class MasterMarshallerBenchmark {
    }
 
    @Benchmark
-   public void masterMarshallerPutIsolated(MasterInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
+   public void newMarshallerPutIsolated(NewMarshallerInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
       Object key = kg.getNextKey();
       Object value = kg.getNextValue();
       SingleRpcCommand cmdToBytes = ih.mkPutCmd(key, value);
