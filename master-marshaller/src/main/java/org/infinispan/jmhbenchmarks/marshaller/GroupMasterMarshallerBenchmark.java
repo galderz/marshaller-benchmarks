@@ -6,21 +6,25 @@ import org.infinispan.commons.io.ByteBuffer;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Group;
+import org.openjdk.jmh.annotations.GroupThreads;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.infra.Blackhole;
 
 @Fork(value = 1, jvmArgs = {
       "-Xmx4G",
       "-Xms4G",
-      "-XX:+HeapDumpOnOutOfMemoryError",
       "-Xss512k",
-      "-XX:HeapDumpPath=/tmp/java_heap"
+      "-XX:+HeapDumpOnOutOfMemoryError",
+      "-XX:HeapDumpPath=/tmp/java_heap",
+      "-Djava.net.preferIPv4Stack=true",
 })
 @BenchmarkMode(Mode.Throughput)
-public class MasterMarshallerBenchmark {
+public class GroupMasterMarshallerBenchmark {
 
    @Benchmark
-   public void masterMarshallerGetIsolated(MasterInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
+   @Group("masterMarshallerGetPut")
+   public void masterMarshallerGet(MasterInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
       Object key = kg.getNextKey();
       ClusteredGetCommand cmdToBytes = ih.mkGetCmd(key);
       ByteBuffer buf = ih.marshaller.objectToBuffer(cmdToBytes);
@@ -31,7 +35,8 @@ public class MasterMarshallerBenchmark {
    }
 
    @Benchmark
-   public void masterMarshallerPutIsolated(MasterInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
+   @Group("masterMarshallerGetPut")
+   public void masterMarshallerPut(MasterInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
       Object key = kg.getNextKey();
       Object value = kg.getNextValue();
       SingleRpcCommand cmdToBytes = ih.mkPutCmd(key, value);
@@ -39,7 +44,7 @@ public class MasterMarshallerBenchmark {
       int size = buf.getBuf().length;
       Object cmdFromBytes = ih.marshaller.objectFromByteBuffer(buf.getBuf(), 0, size);
       bh.consume(cmdFromBytes);
-      ih.putBytesDone(buf.getBuf().length);
+      ih.putBytesDone(size);
    }
 
 }

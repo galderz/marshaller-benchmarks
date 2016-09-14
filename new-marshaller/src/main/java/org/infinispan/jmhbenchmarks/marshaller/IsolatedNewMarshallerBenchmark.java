@@ -12,12 +12,13 @@ import org.openjdk.jmh.infra.Blackhole;
 @Fork(value = 1, jvmArgs = {
       "-Xmx4G",
       "-Xms4G",
-      "-XX:+HeapDumpOnOutOfMemoryError",
       "-Xss512k",
-      "-XX:HeapDumpPath=/tmp/java_heap"
+      "-XX:+HeapDumpOnOutOfMemoryError",
+      "-XX:HeapDumpPath=/tmp/java_heap",
+      "-Djava.net.preferIPv4Stack=true",
 })
 @BenchmarkMode(Mode.Throughput)
-public class NewMarshallerBenchmark {
+public class IsolatedNewMarshallerBenchmark {
 
    @Benchmark
    public void newMarshallerGetIsolated(NewMarshallerInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
@@ -39,7 +40,7 @@ public class NewMarshallerBenchmark {
       int size = buf.getBuf().length;
       Object cmdFromBytes = ih.marshaller.objectFromByteBuffer(buf.getBuf(), 0, size);
       bh.consume(cmdFromBytes);
-      ih.putBytesDone(buf.getBuf().length);
+      ih.putBytesDone(size);
    }
 
 }
