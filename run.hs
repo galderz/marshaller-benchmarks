@@ -23,14 +23,14 @@ jarPath prj =
 
 isolatedThreads :: [Int]
 isolatedThreads =
-    [16]
+    [16, 32, 64, 128]
     -- [16, 32, 64, 128]
     -- [1]
 
 
 groupedThreads :: [Int]
 groupedThreads =
-    [8]
+    [8, 16, 32, 64]
     -- [8, 16, 32, 64]
     -- [1]
 
