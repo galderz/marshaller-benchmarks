@@ -7,14 +7,10 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Group;
-import org.openjdk.jmh.annotations.GroupThreads;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.infra.Blackhole;
 
 @Fork(value = 1, jvmArgs = {
-      "-Xmx4G",
-      "-Xms4G",
-      "-Xss512k",
       "-XX:+HeapDumpOnOutOfMemoryError",
       "-XX:HeapDumpPath=/tmp/java_heap",
       "-Djava.net.preferIPv4Stack=true",

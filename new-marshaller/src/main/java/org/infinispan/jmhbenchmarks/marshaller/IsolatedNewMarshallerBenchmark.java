@@ -10,9 +10,6 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.infra.Blackhole;
 
 @Fork(value = 1, jvmArgs = {
-      "-Xmx4G",
-      "-Xms4G",
-      "-Xss512k",
       "-XX:+HeapDumpOnOutOfMemoryError",
       "-XX:HeapDumpPath=/tmp/java_heap",
       "-Djava.net.preferIPv4Stack=true",
@@ -21,7 +18,7 @@ import org.openjdk.jmh.infra.Blackhole;
 public class IsolatedNewMarshallerBenchmark {
 
    @Benchmark
-   public void newMarshallerGetIsolated(NewMarshallerInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
+   public void newMarshallerGetIsolated(NewInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
       Object key = kg.getNextKey();
       ClusteredGetCommand cmdToBytes = ih.mkGetCmd(key);
       ByteBuffer buf = ih.marshaller.objectToBuffer(cmdToBytes);
@@ -32,7 +29,7 @@ public class IsolatedNewMarshallerBenchmark {
    }
 
    @Benchmark
-   public void newMarshallerPutIsolated(NewMarshallerInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
+   public void newMarshallerPutIsolated(NewInfinispanHolder ih, Blackhole bh, KeyGenerator kg) throws Exception {
       Object key = kg.getNextKey();
       Object value = kg.getNextValue();
       SingleRpcCommand cmdToBytes = ih.mkPutCmd(key, value);
